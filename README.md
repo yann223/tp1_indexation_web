@@ -1,6 +1,13 @@
 # TP1 Indexation web
+
 Yanis Colléaux
+
 ## Crawl
+
+Install requirements:
+```
+pip install -r requirement.txt
+```
 
 To start the crawler, use the command below:
 ```
