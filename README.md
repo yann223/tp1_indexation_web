@@ -13,6 +13,8 @@ or
 python main.py [your_url]
 ```
 
+You can find the results under `output/results.json`
+
 You can change the following parameters in the `main.py`:
 * url to crawl
 * number max of pages to crawl
