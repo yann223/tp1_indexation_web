@@ -36,6 +36,27 @@ class Crawler:
     def __init__(
         self, url, max_pages=50, politeness=1, priority_word="product", user_agent="*"
     ):
+        if not url.startswith("http"):
+            raise ValueError("URL must start with 'http' or 'https'")
+
+        if not isinstance(max_pages, int):
+            raise ValueError("max_pages must be an integer")
+
+        if not isinstance(politeness, (int, float)):
+            raise ValueError("politeness must be an integer or float")
+
+        if not isinstance(priority_word, str):
+            raise ValueError("priority_word must be a string")
+
+        if not isinstance(user_agent, str):
+            raise ValueError("user_agent must be a string")
+
+        if max_pages <= 0:
+            raise ValueError("max_pages must be a positive integer")
+
+        if politeness <= 0:
+            raise ValueError("politeness must be a positive integer or float")
+
         self.url = url
         self.max_pages = max_pages
         self.pages_visited = 0
@@ -92,7 +113,8 @@ class Crawler:
                 self.visited_urls.add(url)
 
                 internal_links = [
-                    link for link in content["links"]
+                    link
+                    for link in content["links"]
                     if parse.urlparse(link).netloc == self.base_url
                 ]
 
@@ -103,7 +125,7 @@ class Crawler:
                     link for link in content["links"] if self.priority_word not in link
                 ]
 
-                for link in reversed(priority_links):  
+                for link in reversed(priority_links):
                     self.queue.appendleft(link)
                 self.queue.extend(other_links)
 
@@ -183,15 +205,3 @@ class Crawler:
         with open("output/results.json", "w") as f:
             json.dump(results, f, indent=4)
         logging.info("Results saved to output/results.json")
-
-
-if __name__ == "__main__":
-    open("output/logs.log", "w", encoding="utf-8").close()
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s",
-        filename="output/logs.log",
-    )
-
-    crawler = Crawler("https://web-scraping.dev/products")
-    crawler.crawl()
