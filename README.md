@@ -6,7 +6,7 @@ Yanis Colléaux
 
 Install requirements:
 ```
-pip install -r requirement.txt
+pip install -r requirements.txt
 ```
 
 To start the crawler, use the command below:
