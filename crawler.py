@@ -115,14 +115,15 @@ class Crawler:
                 internal_links = [
                     link
                     for link in content["links"]
-                    if parse.urlparse(link).netloc == self.base_url
+                    if parse.urlparse(link).netloc == parse.urlparse(self.base_url).netloc
                 ]
 
                 priority_links = [
-                    link for link in content["links"] if self.priority_word in link
+                    link for link in internal_links if self.priority_word in link
                 ]
+                
                 other_links = [
-                    link for link in content["links"] if self.priority_word not in link
+                    link for link in internal_links if self.priority_word not in link
                 ]
 
                 for link in reversed(priority_links):
