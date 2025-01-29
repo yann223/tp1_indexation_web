@@ -2,3 +2,5 @@ urllib
 bs4
 requests
 collections
+pytest
+requests-mock
