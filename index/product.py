@@ -34,3 +34,16 @@ class Product:
             None
         """
         self.variant = variant
+
+    def to_json(self):
+        """
+        Convert the product to a JSON object.
+        
+        Returns:
+            dict: The JSON object representing the product.
+        """
+        return {
+            "title": self.title,
+            "description": self.description,
+            "url": self.id,
+        }

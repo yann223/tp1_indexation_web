@@ -5,8 +5,10 @@ import logging
 import string
 import re
 import os
+import nltk
 from collections import defaultdict
 from datetime import datetime
+from nltk.corpus import stopwords
 from index.product import Product
 
 
@@ -57,10 +59,14 @@ class Indexer:
             Saves an index as a JSON file in the output directory.
     """
 
-    STOPWORDS = set()
-    with open("data/stopwords-en.txt", "r", encoding="utf-8") as file:
-        for line in file:
-            STOPWORDS.add(line.strip())
+    # STOPWORDS = set()
+    # with open("data/stopwords-en.txt", "r", encoding="utf-8") as file:
+    #     for line in file:
+    #         STOPWORDS.add(line.strip())
+
+    nltk.download("stopwords")
+    STOPWORDS = stopwords.words("english")
+    DATA_PATH = "data/TP3"
 
     def __init__(self, jsonl_file):
         self.jsonl_file = jsonl_file
@@ -148,6 +154,21 @@ class Indexer:
         match = re.search(r'/product/(\d+)', url)
         if match:
             return match.group(1)
+        return None
+
+    def get_product_by_id(self, product_id):
+        """
+        Retrieves a product by its ID.
+
+        Args:
+            product_id (str): The ID of the product to retrieve.
+
+        Returns:
+            Product: The product object with the specified ID.
+        """
+        for product in self.products_list:
+            if product.id == product_id:
+                return product
         return None
 
     def tokenize(self, text):

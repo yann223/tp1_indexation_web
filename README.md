@@ -9,6 +9,7 @@ Yanis Colléaux
 * [TP2: Indexes](#index)
     * [Indexes description](#ind_des)
     * [Technical choices](#tech_choices)
+* [TP3: Search engine](#tp3)
 * [Tests](#tests)
 
 ---
@@ -185,6 +186,28 @@ The description positional index records the position of each token in the produ
 * **Data structures**: Python dictionaries (with `defaultdict` for convenience) are used to build and store the indexes, and a `Product` class has been implemented to work with the parsed objects.
 
 * **Additionnal features**: Along with the brand and the origin of the product, we also retrieved the colors and materials of the different products. If we wish to add more features, we just have to modify the `features_list` in the Indexer class to add the needed features.
+---
+
+
+<div id='tp3'/>
+
+## TP3
+
+To make a search, use the command below, and select the menu [3] by typing `3` in the console:
+```
+python main.py
+```
+
+You can then input your query in the console.
+
+The different query results created can be found in `output/search/QUERY.json`
+
+**TO WRITE HERE**
+* handling the origin names (e.g "south", "south africa", "south africa italy")
+* scoring function details
+* search "pipeline"
+* choices of bm25 coeff
+
 ---
 
 <div id='tests'/>

@@ -173,3 +173,4 @@ cython_debug/
 
 results_p.json
 *.pdf
+output/search/*

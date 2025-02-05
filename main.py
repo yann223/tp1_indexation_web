@@ -7,6 +7,7 @@ from consolemenu import ConsoleMenu
 from consolemenu.items import FunctionItem
 from crawler.crawler import Crawler
 from index.indexer import Indexer
+from search_engine.search_engine import SearchEngine
 
 # --------------- For logs ----------------
 if not os.path.exists("output"):
@@ -72,6 +73,24 @@ def make_index():
     index.build_index()
     logging.info("Indexing finished!")
 
+# --------------- Search ----------------
+## --------------- Functions ----------------
+def search():
+    """
+    Search documents from a query
+    """
+    open("output/logs/logs_search.log", "w", encoding="utf-8").close()
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        filename="output/logs/logs_search.log",
+    )
+
+    search_engine = SearchEngine()
+    search_engine.load_indexes()
+    print(search_engine.search())
+    logging.info("Results found!")
+
 
 # --------------- Menu ----------------
 def create_main_menu():
@@ -82,9 +101,11 @@ def create_main_menu():
 
     crawl_item = FunctionItem("Crawl URL", crawl_url, should_exit=True)
     index_item = FunctionItem("Make Indexes", make_index, should_exit=True)
+    search_item = FunctionItem("Search", search, should_exit=True)
 
     men.append_item(crawl_item)
     men.append_item(index_item)
+    men.append_item(search_item)
 
     return men
 
