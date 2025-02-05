@@ -202,10 +202,42 @@ You can then input your query in the console.
 
 The different query results created can be found in `output/search/QUERY.json`
 
+### Technical choices made
+
+* **Total/partial matches in query**: Since all the words are tokenized in a query, the idea of having total matches with the origins of the products could be quite challenging. Indeed, if my product is from South Africa, we don't want it to be returned when the query only contains "south" or "africa". In the mean time, if we have italy and south africa in the same request, we want product from both countries to be returned. To solve this, we will also be aggregating token next to each other and see if together they match with a location in the origin index.
+In that case, the query "South Africa" will be returning products from South Africa, whereas the queries "South" or "Africa" won't. The query "south africa italy" will return products from both South Africa and Italy, while the query "south italy africa" will only return products from italy.
+We will return products with total match for the fields `brand` and `origin`, and partial match for the others.
+* **Scoring function**: The scoring function of a document relatively to a query is made of a computation between a score from the `bm25` function and a custom score explained below.
+$$
+\begin{align*}
+\text{score} &= \text{title\_bm25} + \text{description\_bm25} + \text{origin\_bm25} + \text{brand\_bm25} + \text{domain\_bm25}\\
+&+ \log(\max(0.1, \text{custom\_score}))
+\end{align*}$$
+$$
+\begin{align*}
+\text{custom\_score} &= \text{title\_match}^2 + \text{desc\_match} + \text{mean\_review}^2 + \log(1 + \text{nb\_reviews})\\
+&+ 0.4 \cdot \text{title\_pos\_score} + 0.6 \cdot \text{desc\_pos\_score}
+\end{align*}$$
+With:
+    * $q_i$: the i-th token of the query
+    * $\text{title\_match} = \underset{i=1}{\overset{n}{\sum}} \ \textbf{1}_{q_i \in \text{title}}$ : the number of tokens which are in the title of the product
+    * $\text{desc\_match} = \underset{i=1}{\overset{n}{\sum}} \ \textbf{1}_{q_i \in \text{desc}}$ : the number of tokens which are in the description of the product
+    * $\text{mean\_review}$: the average review of the product
+    * $\text{nb\_reviews}$: the number of total reviews on the product
+    * $\text{title\_pos\_score} = \underset{i=1}{\overset{n}{\sum}} \frac{10}{1 + \text{position\_title}_{q_i}}$ for $q_i$ in the title
+    * $\text{title\_desc\_score} = \underset{i=1}{\overset{n}{\sum}} \frac{10}{1 + \text{position\_description}_{q_i}}$ for $q_i$ in the description
+
+    As the title is shorter and more indicative of the product, $\text{title\_match}$ is squared. The reviews are taken into account with the square of the average review of the product. We use the position of the token to give a bigger score if the token is found early in the title or in the description.
+    Regarding the final score, as the custom score can be bigger than the score computed with the `bm25` function, we decided to add the custom score taken to the logarithm to prevent any exponential impact from the custom score, and give more importance to the score computed with the `bm25` function.
+* **Search pipeline**: When a query is inputed by the user, the following steps will happen:
+    1. Tokenization of the query
+    2. Expansion of the tokenization with synonyms
+    3. Retrieval of the documents which match the tokens from the query (total or partial match depending on the field)
+    4. Retrieval of the metadata (Number of documents before and after filtering)
+    5. Computation of the final score for each document relatively to the query
+    6. Order the documents with the final score descending
+
 **TO WRITE HERE**
-* handling the origin names (e.g "south", "south africa", "south africa italy")
-* scoring function details
-* search "pipeline"
 * choices of bm25 coeff
 
 ---

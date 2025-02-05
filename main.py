@@ -3,6 +3,7 @@ main menu and the functions to crawl and index the data."""
 
 import logging
 import os
+import json
 from consolemenu import ConsoleMenu
 from consolemenu.items import FunctionItem
 from crawler.crawler import Crawler
@@ -88,7 +89,8 @@ def search():
 
     search_engine = SearchEngine()
     search_engine.load_indexes()
-    print(search_engine.search())
+    res = search_engine.search()
+    print(json.dumps(res, indent=4))
     logging.info("Results found!")
 
 

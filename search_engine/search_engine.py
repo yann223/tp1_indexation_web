@@ -140,7 +140,6 @@ class SearchEngine:
         matching_docs = set()
         for token in query_tokens:
             matching_docs.update(self.filter_total_match([token], "brand"))
-            matching_docs.update(self.filter_total_match([token], "origin"))
         matching_docs.update(self.filter_total_match(query_tokens, "origin"))
         matching_docs.update(self.filter_total_match(query_tokens, "domain"))
         matching_docs.update(self.filter_partial_match(query_tokens, "title"))
@@ -186,13 +185,13 @@ class SearchEngine:
             if token in self.title_index and doc_id in dict(self.title_index[token]):
                 positions = dict(self.title_index[token])[doc_id]
                 first_position = min(positions) if positions else 9999
-                title_pos_score = 100 / (1 + first_position)
+                title_pos_score = 10 / (1 + first_position)
             if token in self.description_index and doc_id in dict(
                 self.description_index[token]
             ):
                 positions = dict(self.description_index[token])[doc_id]
                 first_position = min(positions) if positions else 9999
-                desc_pos_score = 100 / (1 + first_position)
+                desc_pos_score = 10 / (1 + first_position)
 
         pos_score = title_pos_score * 0.4 + desc_pos_score * 0.6
         score += pos_score
