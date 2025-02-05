@@ -313,6 +313,6 @@ class Indexer:
         Returns:
             dict: The loaded index data.
         """
-        with open(f"output/indexes/{filename}", "r", encoding="utf-8") as file:
+        with open(filename, "r", encoding="utf-8") as file:
             index = json.load(file)
         return index
