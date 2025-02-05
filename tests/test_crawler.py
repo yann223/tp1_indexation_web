@@ -1,7 +1,8 @@
-import pytest
+"""Tests for the Crawler class and its methods."""
+
 import requests_mock
-from crawler import Crawler
 from bs4 import BeautifulSoup
+from crawler.crawler import Crawler
 
 
 def test_is_allowed_to_crawl():
@@ -13,8 +14,8 @@ def test_is_allowed_to_crawl():
         - The method returns `True` when a URL is allowed to be crawled.
     """
     crawler = Crawler("https://example.com")
-    
-    assert crawler.is_allowed_to_crawl("https://example.com/allowed-page") == True
+
+    assert crawler.is_allowed_to_crawl("https://example.com/allowed-page") is True
 
 
 
@@ -29,8 +30,8 @@ def test_is_not_allowed_to_crawl():
         - The method returns `False` when a URL is disallowed from crawling.
     """
     crawler = Crawler("https://yahoo.com", user_agent="YouBot")
-    
-    assert crawler.is_allowed_to_crawl("https://yahoo.com/oui") == False
+
+    assert crawler.is_allowed_to_crawl("https://yahoo.com/oui") is False
 
 
 def test_parse_html():
@@ -49,11 +50,11 @@ def test_parse_html():
     crawler = Crawler("https://example.com")
 
     html = "<html><head><title>Test Page</title></head><body><p>Hello World</p></body></html>"
-    
+
     with requests_mock.Mocker() as m:
         m.get("https://example.com", text=html)
         soup = crawler.parse_html("https://example.com")
-        
+
         assert isinstance(soup, BeautifulSoup)
         assert soup.title.string == "Test Page"
         assert soup.p.text == "Hello World"

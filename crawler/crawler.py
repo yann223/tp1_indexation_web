@@ -1,7 +1,11 @@
+"""This module defines a web crawler that navigates through a site,
+extracts content from pages, and stores results for further analysis."""
+
 from collections import deque
 import logging
 import time
 import json
+import os
 from urllib import robotparser, parse
 import requests
 from bs4 import BeautifulSoup
@@ -121,7 +125,7 @@ class Crawler:
                 priority_links = [
                     link for link in internal_links if self.priority_word in link
                 ]
-                
+
                 other_links = [
                     link for link in internal_links if self.priority_word not in link
                 ]
@@ -203,6 +207,8 @@ class Crawler:
         Returns:
             None
         """
-        with open("output/results.json", "w") as f:
+        if not os.path.exists("output/crawler"):
+            os.makedirs("output/crawler")
+        with open("output/crawler/results.json", "w", encoding="utf-8") as f:
             json.dump(results, f, indent=4)
-        logging.info("Results saved to output/results.json")
+        logging.info("Results saved to output/crawler/results.json")
