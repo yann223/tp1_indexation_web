@@ -208,24 +208,24 @@ The different query results created can be found in `output/search/QUERY.json`
 In that case, the query "South Africa" will be returning products from South Africa, whereas the queries "South" or "Africa" won't. The query "south africa italy" will return products from both South Africa and Italy, while the query "south italy africa" will only return products from italy.
 We will return products with total match for the fields `brand` and `origin`, and partial match for the others.
 * **Scoring function**: The scoring function of a document relatively to a query is made of a computation between a score from the `bm25` function and a custom score explained below.
-$$
-\begin{align*}
-\text{score} &= \text{title\_bm25} + \text{description\_bm25} + \text{origin\_bm25} + \text{brand\_bm25} + \text{domain\_bm25}\\
-&+ \log(\max(0.1, \text{custom\_score}))
+
+$$\begin{align*}
+\text{score} &= \text{title-bm25} + \text{description-bm25} + \text{origin-bm25} + \text{brand-bm25} + \text{domain-bm25}\\
+&+ \log(\max(0.1, \text{custom-score}))
 \end{align*}$$
-$$
-\begin{align*}
-\text{custom\_score} &= \text{title\_match}^2 + \text{desc\_match} + \text{mean\_review}^2 + \log(1 + \text{nb\_reviews})\\
-&+ 0.4 \cdot \text{title\_pos\_score} + 0.6 \cdot \text{desc\_pos\_score}
+
+$$\begin{align*}
+\text{custom-score} &= \text{title-match}^2 + \text{desc-match} + \text{mean-review}^2 + \log(1 + \text{nb-reviews})\\
+&+ 0.4 \cdot \text{title-pos-score} + 0.6 \cdot \text{desc-pos-score}
 \end{align*}$$
 With:
     * $q_i$: the i-th token of the query
-    * $\text{title\_match} = \underset{i=1}{\overset{n}{\sum}} \ \textbf{1}_{q_i \in \text{title}}$ : the number of tokens which are in the title of the product
-    * $\text{desc\_match} = \underset{i=1}{\overset{n}{\sum}} \ \textbf{1}_{q_i \in \text{desc}}$ : the number of tokens which are in the description of the product
-    * $\text{mean\_review}$: the average review of the product
-    * $\text{nb\_reviews}$: the number of total reviews on the product
-    * $\text{title\_pos\_score} = \underset{i=1}{\overset{n}{\sum}} \frac{10}{1 + \text{position\_title}_{q_i}}$ for $q_i$ in the title
-    * $\text{title\_desc\_score} = \underset{i=1}{\overset{n}{\sum}} \frac{10}{1 + \text{position\_description}_{q_i}}$ for $q_i$ in the description
+    * $\text{title-match} = \underset{i=1}{\overset{n}{\sum}} \ \textbf{1}_{q_i \in \text{title}}$ : the number of tokens which are in the title of the product
+    * $\text{desc-match} = \underset{i=1}{\overset{n}{\sum}} \ \textbf{1}_{q_i \in \text{desc}}$ : the number of tokens which are in the description of the product
+    * $\text{mean-review}$: the average review of the product
+    * $\text{nb-reviews}$: the number of total reviews on the product
+    * $\text{title-pos-score} = \underset{i=1}{\overset{n}{\sum}} \frac{10}{1 + \text{position-title}_{q_i}}$ for $q_i$ in the title
+    * $\text{title-desc-score} = \underset{i=1}{\overset{n}{\sum}} \frac{10}{1 + \text{position-description}_{q_i}}$ for $q_i$ in the description
 
     As the title is shorter and more indicative of the product, $\text{title\_match}$ is squared. The reviews are taken into account with the square of the average review of the product. We use the position of the token to give a bigger score if the token is found early in the title or in the description.
     Regarding the final score, as the custom score can be bigger than the score computed with the `bm25` function, we decided to add the custom score taken to the logarithm to prevent any exponential impact from the custom score, and give more importance to the score computed with the `bm25` function.
