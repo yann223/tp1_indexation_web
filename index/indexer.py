@@ -302,3 +302,17 @@ class Indexer:
         """
         with open(f"output/indexes/{filename}", "w", encoding="utf-8") as file:
             json.dump(index, file, indent=4)
+
+    def load_index_from_json(self, filename="index.json"):
+        """
+        Loads an index from a JSON file.
+
+        Args:
+            filename (str): The input filename.
+
+        Returns:
+            dict: The loaded index data.
+        """
+        with open(f"output/indexes/{filename}", "r", encoding="utf-8") as file:
+            index = json.load(file)
+        return index
