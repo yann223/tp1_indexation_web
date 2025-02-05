@@ -135,6 +135,21 @@ class Indexer:
             return match.group(1)
         return None
 
+    def extract_product_id(url):
+        """
+        Extracts the id number from a URL.
+
+        Args:
+            url (str): The URL to extract the id number from.
+
+        Returns:
+            int or None: The id number if present, otherwise None.
+        """
+        match = re.search(r'/product/(\d+)', url)
+        if match:
+            return match.group(1)
+        return None
+
     def tokenize(self, text):
         """
         Tokenizes the given text by removing punctuation and stopwords.
