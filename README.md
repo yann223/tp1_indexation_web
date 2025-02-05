@@ -220,12 +220,12 @@ $$\begin{align*}
 
 * With
     * $q_i$: the i-th token of the query
-    * $\text{title-match} = \underset{i=1}{\overset{n}{\sum}} \textbf{1}_{q_i \in \text{title}}$ : the number of tokens which are in the title of the product
-    * $\text{desc-match} = \underset{i=1}{\overset{n}{\sum}} \textbf{1}_{q_i \in \text{desc}}$ : the number of tokens which are in the description of the product
+    * $\text{title-match} = \underset{i=1}{\overset{n}{\sum}}\textbf{1}_{q_i \in \text{title}}$ : the number of tokens which are in the title of the product
+    * $\text{desc-match} = \underset{i=1}{\overset{n}{\sum}}\textbf{1}_{q_i \in \text{desc}}$ : the number of tokens which are in the description of the product
     * $\text{mean-review}$: the average review of the product
     * $\text{nb-reviews}$: the number of total reviews on the product
-    * $\text{title-pos-score} = \underset{i=1}{\overset{n}{\sum}} \frac{10}{1 + \text{position-title}_{q_i}}$ for $q_i$ in the title
-    * $\text{title-desc-score} = \underset{i=1}{\overset{n}{\sum}} \frac{10}{1 + \text{position-description}_{q_i}}$ for $q_i$ in the description
+    * $\text{title-pos-score} = \underset{i=1}{\overset{n}{\sum}}\frac{10}{1 + \text{position-title}_{q_i}}$ for $q_i$ in the title
+    * $\text{title-desc-score} = \underset{i=1}{\overset{n}{\sum}}\frac{10}{1 + \text{position-description}_{q_i}}$ for $q_i$ in the description
 
     As the title is shorter and more indicative of the product, $\text{title-match}$ is squared. The reviews are taken into account with the square of the average review of the product. We use the position of the token to give a bigger score if the token is found early in the title or in the description.
     Regarding the final score, as the custom score can be bigger than the score computed with the `bm25` function, we decided to add the custom score taken to the logarithm to prevent any exponential impact from the custom score, and give more importance to the score computed with the `bm25` function.
