@@ -213,12 +213,12 @@ $$\begin{align*}
 \text{score} &= \text{title-bm25} + \text{description-bm25} + \text{origin-bm25} + \text{brand-bm25} + \text{domain-bm25}\\
 &+ \log(\max(0.1, \text{custom-score}))
 \end{align*}$$
-
 $$\begin{align*}
 \text{custom-score} &= \text{title-match}^2 + \text{desc-match} + \text{mean-review}^2 + \log(1 + \text{nb-reviews})\\
 &+ 0.4 \cdot \text{title-pos-score} + 0.6 \cdot \text{desc-pos-score}
 \end{align*}$$
-With:
+
+* With
     * $q_i$: the i-th token of the query
     * $\text{title-match} = \underset{i=1}{\overset{n}{\sum}} \ \textbf{1}_{q_i \in \text{title}}$ : the number of tokens which are in the title of the product
     * $\text{desc-match} = \underset{i=1}{\overset{n}{\sum}} \ \textbf{1}_{q_i \in \text{desc}}$ : the number of tokens which are in the description of the product
