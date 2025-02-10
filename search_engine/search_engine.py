@@ -314,9 +314,9 @@ class SearchEngine:
             product (object): The product object containing document information.
             doc_field (str): The field to compute BM25 for ("title", "description",
                             "origin", "brand", or "domain").
-            K1 (float, optional): BM25 parameter controlling term frequency saturation.
+            k1 (float, optional): BM25 parameter controlling term frequency saturation.
                                     Default is 1.5.
-            B (float, optional): BM25 parameter controlling document length normalization.
+            b (float, optional): BM25 parameter controlling document length normalization.
                                     Default is 0.75.
 
         Returns:

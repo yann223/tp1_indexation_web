@@ -237,8 +237,121 @@ $$\begin{align*}
     5. Computation of the final score for each document relatively to the query
     6. Order the documents with the final score descending
 
-**TO WRITE HERE**
-* choices of bm25 coeff
+* **BM25 Coefficients**: Here we chose $k_1=1.5$ and $b=0.75$ by default. We judged that the scoring function behaves correctly regarding our expectations and that no optimisation of these coefficients are needed.
+
+### Requests examples
+
+We will show here the metadata of several requests to see how works the search engine under different conditions:
+
+* Request `italy`:
+```
+{
+    "Total number of documents": 156,
+    "Number of documents after filtering": 21,
+    "Products": [...
+    ]
+}
+```
+Here only 21 documents go through the filtering, which matches the number of products from Italy.
+
+* Request `south africa`:
+```
+{
+    "Total number of documents": 156,
+    "Number of documents after filtering": 8,
+    "Products": [...
+    ]
+}
+```
+Here again, only 8 documents, which origin matches with South Africa goes through the filtering.
+
+* Request `italy south africa`:
+```
+{
+    "Total number of documents": 156,
+    "Number of documents after filtering": 29,
+    "Products": [...
+    ]
+}
+```
+Here, 29 products from either Italy or South Africa are returned.
+
+* Request `south italy africa`:
+```
+{
+    "Total number of documents": 156,
+    "Number of documents after filtering": 21,
+    "Products": [...
+    ]
+}
+```
+Here, only the italian products are returned as expected.
+
+Regarding the synonyms, we can test the two following requests:
+
+* Request `usa`:
+```
+{
+    "Total number of documents": 156,
+    "Number of documents after filtering": 31,
+    "Products": [...
+    ]
+}
+```
+
+* Request `america`:
+```
+{
+    "Total number of documents": 156,
+    "Number of documents after filtering": 31,
+    "Products": [...
+    ]
+}
+```
+This shows us that the expansion of a request with synonyms works well.
+
+* Request `sweet candy box`:
+```
+{
+    "Total number of documents": 156,
+    "Number of documents after filtering": 21,
+    "Products": [
+        {
+            "title": "Box of Chocolate Candy",
+            "description": "Whether you're looking for the perfect gift or just want to treat yourself, our box of chocolate candy is sure to satisfy. Indulge your sweet tooth with our box of chocolate candy. Choose from a variety of flavors including zesty orange and sweet cherry",
+            "url": "https://web-scraping.dev/product/25",
+            "score": 16.084055221914465
+        },
+        {
+            "title": "Box of Chocolate Candy",
+            "description": "Whether you're looking for the perfect gift or just want to treat yourself, our box of chocolate candy is sure to satisfy. Each box contains an assortment of rich, flavorful chocolates with a smooth, creamy filling. Indulge your sweet tooth with our box of chocolate candy",
+            "url": "https://web-scraping.dev/product/1",
+            "score": 15.609797961908306
+        },
+        {
+            "title": "Box of Chocolate Candy",
+            "description": "Choose from a variety of flavors including zesty orange and sweet cherry. Each box contains an assortment of rich, flavorful chocolates with a smooth, creamy filling. Indulge your sweet tooth with our box of chocolate candy",
+            "url": "https://web-scraping.dev/product/13",
+            "score": 15.562981963666246
+        },
+        {
+            "title": "Box of Chocolate Candy - Cherry large",
+            "description": "Indulge your sweet tooth with our box of chocolate candy. Whether you're looking for the perfect gift or just want to treat yourself, our box of chocolate candy is sure to satisfy. Choose from a variety of flavors including zesty orange and sweet cherry",
+            "url": "https://web-scraping.dev/product/1?variant=cherry-large",
+            "score": 15.218771407810628
+        },
+        {
+            "title": "Box of Chocolate Candy - Cherry small",
+            "description": "Each box contains an assortment of rich, flavorful chocolates with a smooth, creamy filling. Whether you're looking for the perfect gift or just want to treat yourself, our box of chocolate candy is sure to satisfy. Indulge your sweet tooth with our box of chocolate candy",
+            "url": "https://web-scraping.dev/product/25?variant=cherry-small",
+            "score": 14.91977461122283
+        }
+    ]
+}
+```
+As expected, the best results are all from the same product (Box of chocolate candy), and all of them contains the word "sweet" in the description.
+To analyze things a little further, the three first products have the same title, but not the same descriptions. For the first products, the terms used in the request occur 6 times in the description, making it first of the list. For the second and third products, the terms from the request only occur 5 times in the description, making them have a really close score, which differs only by the position of the releving terms in the description.
+The last two products both have 6 occurences of the request terms in their description, but the title is longer than the others, making it having less matching terms in proportion. Since we tend to privilege a matching title when we compute the score, these two products are ranked a little bit worse than the others.
 
 ---
 
